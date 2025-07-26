@@ -20,7 +20,7 @@ export function EmotionAnalyzer() {
       return;
     }
 
-    setIsAnalyzing(true);
+    // No loading state needed - it's instant now!
     try {
       const detectedEmotion = await detectEmotion(inputText);
       setEmotion(detectedEmotion);
@@ -28,17 +28,12 @@ export function EmotionAnalyzer() {
     } catch (error) {
       console.error("Error analyzing emotion:", error);
       setEmotion("neutral");
-    } finally {
-      setIsAnalyzing(false);
     }
   }, []);
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      analyzeEmotion(text);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
+    // Instant analysis - no debounce needed!
+    analyzeEmotion(text);
   }, [text, analyzeEmotion]);
 
   const exampleTexts = [
@@ -60,7 +55,7 @@ export function EmotionAnalyzer() {
           </h1>
         </div>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Discover the emotional tone of any text using advanced AI. Type or paste your message below to see what emotions it conveys.
+          Lightning-fast emotion detection using advanced pattern recognition. Get instant results as you type - no AI delays!
         </p>
       </div>
 
@@ -68,39 +63,29 @@ export function EmotionAnalyzer() {
       <Card className="backdrop-blur-sm bg-background/80 shadow-glow border-primary/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span>Analyze Your Text</span>
-            {isAnalyzing && <Loader2 className="h-5 w-5 animate-spin text-primary" />}
+            <span>⚡ Instant Emotion Analysis</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <Textarea
-              placeholder="Type or paste your text here to analyze its emotional tone..."
+              placeholder="Type here and watch emotions appear instantly! Try: 'I just got promoted!' or 'I'm so frustrated with this traffic'"
               value={text}
               onChange={(e) => setText(e.target.value)}
               className="min-h-32 resize-none text-base transition-all duration-300 focus:shadow-emotion"
               maxLength={1000}
             />
             <div className="flex justify-between items-center text-sm text-muted-foreground">
-              <span>Type something to see the emotion analysis</span>
+              <span>⚡ Results appear instantly as you type!</span>
               <span>{text.length}/1000</span>
             </div>
           </div>
 
           {/* Emotion Result */}
-          {(hasAnalyzed || isAnalyzing) && (
+          {hasAnalyzed && (
             <div className="space-y-4">
               <h3 className="font-semibold text-lg">Detected Emotion:</h3>
-              {isAnalyzing ? (
-                <div className="flex items-center justify-center p-8">
-                  <div className="flex items-center gap-3">
-                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                    <span>Analyzing emotional tone...</span>
-                  </div>
-                </div>
-              ) : (
-                <EmotionCard emotion={emotion} />
-              )}
+              <EmotionCard emotion={emotion} />
             </div>
           )}
         </CardContent>
